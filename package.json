@@ -1,0 +1,16 @@
+{
+  "name": "InclusionCoin",
+  "private": true,
+  "scripts": {
+    "compile": "node_modules/.bin/solcjs --bin --abi",
+    "cli": "./bin/inclucoin"
+  },
+  "dependencies": {
+    "dotenv": "^8.0.0",
+    "ganache-cli": "^6.5.1",
+    "readline-sync": "^1.4.10",
+    "solc": "^0.5.10",
+    "truffle-hdwallet-provider": "^1.0.16",
+    "web3": "^1.2.1"
+  }
+}
