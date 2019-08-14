@@ -21,8 +21,6 @@ const getUserInput = (web3, contract) => {
 
         case 'mint':
             address = process.env.WALLET_ADDRESS;
-
-            console.log(command);
     
             if (command.length > 1) {
                 address = command[1];
@@ -42,7 +40,12 @@ const getUserInput = (web3, contract) => {
                 console.log(`...txHash -> ${result.transactionHash}`);
 
                 getUserInput(web3, contract);
-            });
+            })
+            .catch(error => {
+                console.log('Minting failed!');
+                getUserInput(web3, contract);
+            })
+            ;
             break;
         
         case 'balance':
