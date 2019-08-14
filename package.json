@@ -3,7 +3,8 @@
   "private": true,
   "scripts": {
     "compile": "node_modules/.bin/solcjs --bin --abi",
-    "cli": "./bin/inclucoin"
+    "cli": "./bin/inclucoin",
+    "deploy": "./scripts/deploy-contract.js"
   },
   "dependencies": {
     "dotenv": "^8.0.0",

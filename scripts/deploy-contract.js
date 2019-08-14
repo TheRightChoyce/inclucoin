@@ -14,9 +14,9 @@ const provider = new HDWalletProvider(
 )
 let web3 = new Web3(provider);
 
-let bytecode = `0x${fs.readFileSync('InclusionCoin_sol_Coin.bin').toString()}`;
+let bytecode = `0x${fs.readFileSync('../contracts/InclusionCoin_sol_Coin.bin').toString()}`;
 let abi = JSON.parse(
-    fs.readFileSync('InclusionCoin_sol_Coin.abi').toString()
+    fs.readFileSync('../contracts/InclusionCoin_sol_Coin.abi').toString()
 );
 
 let deployedContract = new web3.eth.Contract(abi);

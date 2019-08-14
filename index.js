@@ -8,6 +8,7 @@ const HDWalletProvider = require('truffle-hdwallet-provider');
 const getUserInput = (web3, contract) => {
     // while(loop) {
         
+    console.log('');
     let command = readline.question('> ').split(' ');
     let address = '';
 
@@ -20,22 +21,25 @@ const getUserInput = (web3, contract) => {
 
         case 'mint':
             address = process.env.WALLET_ADDRESS;
+
+            console.log(command);
     
-            if (command.length >= 2) {
+            if (command.length > 1) {
                 address = command[1];
             }
+            let mintAmount = command.length > 2 ? parseInt(command[2]) : 100;
 
             process.stdout.write('Minting coins...')
 
             contract.methods.mint(
-                address, 100
+                address, mintAmount
             )
             .send({
                 from: '0xc50CB4999eee6Ba6337191aa6308DB0E5F0379C1'
             })
             .then(result => {
                 process.stdout.write('  success!\n\r');
-                console.log(`  TxHash -> ${result.transactionHash}`);
+                console.log(`...txHash -> ${result.transactionHash}`);
 
                 getUserInput(web3, contract);
             });
@@ -69,7 +73,7 @@ const getUserInput = (web3, contract) => {
             let recipient = command[1];
             let amount = command[2];
 
-            console.log(`Sending ${amount} Inclucoin to ${recipient}...`)
+            console.log(`Sending ${amount} Inclucoin to ${recipient}`)
             
             contract.methods.send(
                 recipient, amount
@@ -93,42 +97,29 @@ const getUserInput = (web3, contract) => {
             })
             
             .on('error', function(error){ 
-                console.log('error', error);
+                console.log(`... Transaction failed!`);
+                // console.log(`... Reason: ${error}`);
             })
             
             .then(function(receipt){
                 console.log('... Finished! Coins have been sent');
                 sending = false;
                 getUserInput(web3, contract);
+            })
+
+            .catch(error => {
+                console.log(`... Transaction failed!`);
+                getUserInput(web3, contract);
             });
             
             console.log('... Waiting to start')
-            
-            // let counter = 0;
-            // setTimeout(() => {
-                
-            //     if(sending) {
-            //         process.stdout.write('.')
-                    
-            //         counter++;
-                    
-            //         if(counter > 85) {
-            //             process.stdout.write('\r\n');
-            //         }
-            //     }
-            //     else {
-            //         console.log('  Coins have been sent!');
-            //         getUserInput(web3, contract);
-            //     }
-                
-            // }, 5000);
-            
-            // sendCoin(
-            //     contract,
-            //     command[1],
-            //     command[2]
-            // )
+    
             break;
+        
+        default:
+            console.log(' ?.?');
+            getUserInput(web3, contract);
+            break
     }
 }
 
@@ -147,11 +138,13 @@ module.exports = () => {
         'https://rinkeby.infura.io',
     )
     let web3 = new Web3(provider);
-    let bytecode = `0x${fs.readFileSync('InclusionCoin_sol_Coin.bin').toString()}`;
+    let bytecode = `0x${fs.readFileSync('./contracts/InclusionCoin_sol_Coin.bin').toString()}`;
     let abi = JSON.parse(
-        fs.readFileSync('InclusionCoin_sol_Coin.abi').toString()
+        fs.readFileSync('./contracts/InclusionCoin_sol_Coin.abi').toString()
     );
     const contract = new web3.eth.Contract(abi, process.env.CONTRACT_ADDRESS);
     
     getUserInput(web3, contract);
 }
+
+// send 0x7BC00fF7364fA09a2f0ABB89455061F047c5FCFA 1000
